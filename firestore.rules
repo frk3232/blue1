@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function isAdmin() {
+      return isAuthenticated() && 
+        ((exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') || 
+         (request.auth.token.email == "fadlur775@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    // User Profiles
+    match /users/{uid} {
+      function isValidUser(data) {
+        return data.uid is string && 
+               (!('homeCity' in data) || data.homeCity is string) &&
+               (!('savedDestinations' in data) || data.savedDestinations is list);
+      }
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid) && isValidUser(request.resource.data);
+      allow update: if isOwner(uid) && isValidUser(request.resource.data);
+    }
+
+    // Traffic Logs (User specific or system logs)
+    match /traffic_logs/{logId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated(); // Users can log their route queries
+    }
+
+    // Safety Hotspots (Publicly readable, admin writable)
+    match /safety_hotspots/{spotId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

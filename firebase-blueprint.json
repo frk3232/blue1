@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Manages user-specific settings and saved locations.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "homeCity": { "type": "string", "description": "User's home city (e.g., Kochi, Trivandrum)" },
+        "savedDestinations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "address": { "type": "string" },
+              "lat": { "type": "number" },
+              "lng": { "type": "number" }
+            }
+          }
+        }
+      },
+      "required": ["uid"]
+    },
+    "TrafficLog": {
+      "title": "Traffic Log",
+      "description": "Stores traffic snapshots for AI analysis and historical tracking.",
+      "type": "object",
+      "properties": {
+        "routeId": { "type": "string" },
+        "currentTravelTime": { "type": "number", "description": "Current travel time in seconds" },
+        "aiPredictedTime": { "type": "number", "description": "AI predicted travel time in seconds" },
+        "isPredictedJam": { "type": "boolean" },
+        "recommendationText": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["routeId", "timestamp"]
+    },
+    "SafetyHotspot": {
+      "title": "Safety Hotspot",
+      "description": "Marks high-accident or high-risk zones on the map.",
+      "type": "object",
+      "properties": {
+        "locationName": { "type": "string" },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "riskLevel": { "type": "string", "enum": ["Low", "Med", "High"] }
+      },
+      "required": ["locationName", "lat", "lng", "riskLevel"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": "UserProfile",
+      "description": "User profile data"
+    },
+    "/traffic_logs/{logId}": {
+      "schema": "TrafficLog",
+      "description": "Historical traffic analysis logs"
+    },
+    "/safety_hotspots/{spotId}": {
+      "schema": "SafetyHotspot",
+      "description": "Public safety data for high-risk zones"
+    }
+  }
+}
