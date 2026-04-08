@@ -1,3 +1,4 @@
+-- 
 -- Roll No: 16
 -- Name: FADLU RAHMAN K
 -- Program: Practice Questions - IV
@@ -7,6 +8,10 @@
 -- creating schema <employee>
 -- 
 db.createCollection("employee")
+
+-- 
+-- MongoDB Query Statements
+-- 
 
 -- 
 -- Q1. Insert a single employee document.
