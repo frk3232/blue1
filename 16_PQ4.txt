@@ -1,0 +1,89 @@
+-- Roll No: 16
+-- Name: FADLU RAHMAN K
+-- Program: Practice Questions - IV
+-- 
+
+-- 
+-- creating schema <employee>
+-- 
+db.createCollection("employee")
+
+-- 
+-- Q1. Insert a single employee document.
+-- 
+db.Employee.insertOne({empid:101,name:"Akash",department:"IT",salary:50000})
+
+-- 
+-- Q2. Insert 5 employee document at once.
+-- 
+db.employee.insertMany([{empid:102,name:"Aswin",department:"CS",salary:45000},{empid:103,name:"Safvan",department:"IT",salary:35000},{empid:104,name:"Kuttan",department:"CA",salary:28000},{empid:105,name:"Abishek",department:"CS",salary:150000},{empid:106,name:"Danush",department:"Finance",salary:25000}]);
+
+-- 
+-- Q3. Increase salary of employee with empid = 101 to 25000.
+-- 
+db.employee.updateOne({empid:101},{$inc:{salary:25000}})
+
+-- 
+-- Q4. Increase salary of all employee in IT by 5000.
+-- 
+db.employee.updateMany({department:"IT"},{$inc:{salary:5000}})
+
+-- 
+-- Q5. Add a new key "experience" with value 2 to all employee
+-- 
+db.employee.updateMany({},{$set:{experience:2}})
+
+-- 
+-- Q6. Rename the key "department" to "dept".
+-- 
+db.employee.updateMany({department:{$exists:true}},{$rename:{"department":"dept"}})
+
+-- 
+-- Q7. Remove the key "experience" from all documents
+-- 
+db.employee.updateMany({},{$unset:{experience:0}})
+
+-- 
+-- Q8. Delete an employee with empid=101
+-- 
+db.employee.deleteOne({ empid: 101 })
+
+-- 
+-- Q9. Display all employees
+-- 
+db.employee.find()
+
+-- 
+-- Q10. Display employees working in "IT" department
+-- 
+db.employee.find({dept:"IT"})
+
+-- 
+-- Q11. Display employees with salary greater than 30000
+-- 
+db.employee.find({salary:{$gt:30000}})
+
+-- 
+-- Q12. Display only name and salary of all employees
+-- 
+db.employee.find({},{name:1,salary:1,_id:0})
+
+-- 
+-- Q13. Display employees working in "Finance" or Salary > 35000
+-- 
+db.employee.find( {$or:[{dept:"Finance"},{salary:{$gt:35000}}]} )
+
+-- 
+-- Q14. Display employees where salary between 25000 and 40000
+-- 
+db.employee.find({ salary: { $gte: 25000, $lte: 40000 } })
+
+-- 
+-- Q15. Sort employees by salary in descending order.
+-- 
+db.employee.find().sort({salary:-1})
+
+-- 
+-- Q16. Display top 2 highest paid employees.
+-- 
+db.employee.find().sort({salary:-1}).limit(2)
